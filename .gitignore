@@ -26,3 +26,8 @@ Thumbs.db
 
 # Prisma
 prisma/migrations/
+
+# Circle recovery files (CRITICAL - DO NOT COMMIT)
+circle-recovery/
+*.recovery
+*.dat

@@ -3,32 +3,26 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 model AgentWallet {
   id             String   @id @default(uuid())
-  circleWalletId String   @unique // The Circle Wallet ID
-  address        String   // The blockchain address (0x...)
+  circleWalletId String   @unique
+  address        String
   createdAt      DateTime @default(now())
 }
 
-enum Action {
-  BUY
-  SELL
-  HOLD
-}
-
 model AgentLog {
-  id              String   @id @default(uuid())
-  timestamp       DateTime @default(now())
-  action          Action
-  amount          String   // Storing as string to avoid floating point issues, or use Decimal
-  reason          String   @db.Text
-  sentimentScore  Float
+  id                String   @id @default(uuid())
+  timestamp         DateTime @default(now())
+  action            String
+  amount            String
+  reason            String
+  sentimentScore    Float
   marketApySnapshot Float
-  txHash          String?
+  txHash            String?
 }
 
 model MarketData {

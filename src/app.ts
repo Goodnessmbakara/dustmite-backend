@@ -1,6 +1,8 @@
 import fastify, { FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
 import fastifyEnv from '@fastify/env';
+import fastifySwagger from '@fastify/swagger';
+import fastifySwaggerUi from '@fastify/swagger-ui';
 import routes from './routes';
 import { startAgentLoop } from './worker/agentLoop';
 import dotenv from 'dotenv';
@@ -40,6 +42,38 @@ const start = async () => {
     await app.register(fastifyEnv, options);
     await app.register(cors, {
       origin: '*'
+    });
+
+    // Swagger Documentation
+    await app.register(fastifySwagger, {
+      openapi: {
+        openapi: '3.0.0',
+        info: {
+          title: 'DustMite API',
+          description: 'Autonomous treasury agent that moves idle USDC into yield-bearing tokens using AI decision-making',
+          version: '1.0.0'
+        },
+        servers: [
+          {
+            url: 'http://localhost:3000',
+            description: 'Development server'
+          }
+        ],
+        tags: [
+          { name: 'health', description: 'Health check endpoints' },
+          { name: 'agent', description: 'Agent operations and status' },
+          { name: 'admin', description: 'Administrative operations' }
+        ]
+      }
+    });
+
+    await app.register(fastifySwaggerUi, {
+      routePrefix: '/documentation',
+      uiConfig: {
+        docExpansion: 'list',
+        deepLinking: false
+      },
+      staticCSP: true
     });
 
     // Routes
